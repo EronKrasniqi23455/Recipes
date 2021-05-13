@@ -22,6 +22,10 @@ namespace Recipes.Data
                 table.UserId,
                 table.RecipeId
             });
+            builder.Entity<RecipeIngridient>().HasKey(table => new { 
+                table.IngridientId,
+                table.RecipeId
+            });
         }
         //To create tables into our database via migrations 
         public DbSet<Category> Categories{ get; set; }

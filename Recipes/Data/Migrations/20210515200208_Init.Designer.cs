@@ -10,15 +10,15 @@ using Recipes.Data;
 namespace Recipes.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210513084420_Init")]
+    [Migration("20210515200208_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -31,18 +31,18 @@ namespace Recipes.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
+                        .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
@@ -85,8 +85,8 @@ namespace Recipes.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -98,12 +98,12 @@ namespace Recipes.Data.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -121,17 +121,17 @@ namespace Recipes.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
+                        .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
+                        .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
@@ -164,12 +164,12 @@ namespace Recipes.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -206,12 +206,12 @@ namespace Recipes.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -254,7 +254,7 @@ namespace Recipes.Data.Migrations
                     b.ToTable("Favorites");
                 });
 
-            modelBuilder.Entity("Recipes.Models.DataModels.Ingridient", b =>
+            modelBuilder.Entity("Recipes.Models.DataModels.Ingredient", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -271,7 +271,7 @@ namespace Recipes.Data.Migrations
 
                     b.HasIndex("UnitId");
 
-                    b.ToTable("Ingridients");
+                    b.ToTable("Ingredients");
                 });
 
             modelBuilder.Entity("Recipes.Models.DataModels.Recipe", b =>
@@ -306,22 +306,27 @@ namespace Recipes.Data.Migrations
                     b.ToTable("Recipes");
                 });
 
-            modelBuilder.Entity("Recipes.Models.DataModels.RecipeIngridient", b =>
+            modelBuilder.Entity("Recipes.Models.DataModels.RecipeIngredient", b =>
                 {
-                    b.Property<int>("IngridientId")
+                    b.Property<int>("IngredientId")
                         .HasColumnType("int");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("IngridientId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Quantity")
                         .HasColumnType("float");
 
-                    b.HasKey("IngridientId", "RecipeId");
+                    b.HasKey("IngredientId", "RecipeId");
+
+                    b.HasIndex("IngridientId");
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("RecipeIngridients");
+                    b.ToTable("RecipeIngredients");
                 });
 
             modelBuilder.Entity("Recipes.Models.DataModels.Unit", b =>
@@ -393,19 +398,23 @@ namespace Recipes.Data.Migrations
             modelBuilder.Entity("Recipes.Models.DataModels.Favorite", b =>
                 {
                     b.HasOne("Recipes.Models.DataModels.Recipe", "Recipe")
-                        .WithMany()
+                        .WithMany("Favorites")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("Recipes.Models.DataModels.Ingridient", b =>
+            modelBuilder.Entity("Recipes.Models.DataModels.Ingredient", b =>
                 {
                     b.HasOne("Recipes.Models.DataModels.Unit", "Unit")
-                        .WithMany()
+                        .WithMany("Ingredients")
                         .HasForeignKey("UnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Unit");
                 });
 
             modelBuilder.Entity("Recipes.Models.DataModels.Recipe", b =>
@@ -415,21 +424,42 @@ namespace Recipes.Data.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Recipes.Models.DataModels.RecipeIngridient", b =>
+            modelBuilder.Entity("Recipes.Models.DataModels.RecipeIngredient", b =>
                 {
-                    b.HasOne("Recipes.Models.DataModels.Ingridient", "Ingridient")
-                        .WithMany()
-                        .HasForeignKey("IngridientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Recipes.Models.DataModels.Ingredient", "Ingredient")
+                        .WithMany("Recipes")
+                        .HasForeignKey("IngridientId");
 
                     b.HasOne("Recipes.Models.DataModels.Recipe", "Recipe")
-                        .WithMany("Ingridients")
+                        .WithMany("Ingredients")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("Recipes.Models.DataModels.Ingredient", b =>
+                {
+                    b.Navigation("Recipes");
+                });
+
+            modelBuilder.Entity("Recipes.Models.DataModels.Recipe", b =>
+                {
+                    b.Navigation("Favorites");
+
+                    b.Navigation("Ingredients");
+                });
+
+            modelBuilder.Entity("Recipes.Models.DataModels.Unit", b =>
+                {
+                    b.Navigation("Ingredients");
                 });
 #pragma warning restore 612, 618
         }

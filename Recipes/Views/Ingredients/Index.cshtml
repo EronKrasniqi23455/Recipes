@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Recipes.Models.DataModels.Ingredient>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Ingredients</h1>
+<link href="~/css/datatables.min.css" rel="stylesheet" />
+<p>
+    <a asp-action="Create" class="btn btn-info">Add</a>
+</p>
+<table class="table" id="dataTable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Unit)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Unit.Id)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts{
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/datatables.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+    </script>
+}

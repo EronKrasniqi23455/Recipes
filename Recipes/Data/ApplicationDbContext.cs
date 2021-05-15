@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Recipes.Data
 {
+    //This class is an important class in entity framework, is a connection between your classes and database
     public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -22,17 +23,17 @@ namespace Recipes.Data
                 table.UserId,
                 table.RecipeId
             });
-            builder.Entity<RecipeIngridient>().HasKey(table => new { 
-                table.IngridientId,
+            builder.Entity<RecipeIngredient>().HasKey(table => new { 
+                table.IngredientId,
                 table.RecipeId
             });
         }
         //To create tables into our database via migrations 
         public DbSet<Category> Categories{ get; set; }
         public DbSet<Favorite> Favorites { get; set; }
-        public DbSet<Ingridient> Ingridients{ get; set; }
+        public DbSet<Ingredient> Ingredients{ get; set; }
         public DbSet<Recipe> Recipes{ get; set; }
-        public DbSet<RecipeIngridient> RecipeIngridients{ get; set; }
+        public DbSet<RecipeIngredient> RecipeIngredients{ get; set; }
         public DbSet<Unit> Units{ get; set; }
 
     }

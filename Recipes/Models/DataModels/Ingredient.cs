@@ -19,6 +19,7 @@ namespace Recipes.Models.DataModels
 
         public string Name { get; set; }
 
+        [Display(Name="Unit")]
         public int UnitId { get; set; }
         //Create relation between Ingridient and Unit table
         [ForeignKey("UnitId")]

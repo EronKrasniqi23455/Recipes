@@ -1,22 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Recipes.Data;
 using Recipes.Models.DataModels;
+using Recipes.Models.ViewModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
+using Grpc.Core;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Recipes.Controllers
 {
     public class RecipesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly Microsoft.AspNetCore.Identity.UserManager<IdentityUser> _userManager;
+        private IHostingEnvironment hostingEnv;
 
-        public RecipesController(ApplicationDbContext context)
+
+        public RecipesController(ApplicationDbContext context, Microsoft.AspNetCore.Identity.UserManager<IdentityUser> userManager, IHostingEnvironment env)
         {
             _context = context;
+            _userManager = userManager;
+            this.hostingEnv = env;
         }
 
         // GET: Recipes
@@ -48,24 +60,37 @@ namespace Recipes.Controllers
         // GET: Recipes/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Title");
             return View();
         }
 
         // POST: Recipes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,UserId,PictureURL,Duration,Description,CategoryId")] Recipe recipe)
+        public async Task<IActionResult> Create(RecipeViewModel recipe)
         {
             if (ModelState.IsValid)
             {
+                recipe.UserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                if (recipe.File != null)
+                {
+                    Random rnd = new Random();
+                    int month = rnd.Next(2323232, 949494943);
+                    string ImagePath = month + System.IO.Path.GetFileName(recipe.File.FileName);
+                    var FileDic = "Files";
+                    string physicalPath = Path.Combine(hostingEnv.WebRootPath, FileDic);
+                    var t = Path.Combine(physicalPath, ImagePath);
+                    using (FileStream fs = System.IO.File.Create(t))
+                    {
+                        recipe.File.CopyTo(fs);
+                    }
+                    recipe.PictureURL = ImagePath;
+                }
                 _context.Add(recipe);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", recipe.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Title", recipe.CategoryId);
             return View(recipe);
         }
 

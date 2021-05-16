@@ -10,6 +10,7 @@ using Recipes.Models.DataModels;
 
 namespace Recipes.Controllers
 {
+
     public class IngredientsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -48,7 +49,7 @@ namespace Recipes.Controllers
         // GET: Ingredients/Create
         public IActionResult Create()
         {
-            ViewData["UnitId"] = new SelectList(_context.Units, "Id", "Id");
+            ViewData["UnitId"] = new SelectList(_context.Units, "Id", "Name");
             return View();
         }
 
@@ -65,7 +66,7 @@ namespace Recipes.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UnitId"] = new SelectList(_context.Units, "Id", "Id", ingredient.UnitId);
+            ViewData["UnitId"] = new SelectList(_context.Units, "Id", "Name", ingredient.UnitId);
             return View(ingredient);
         }
 

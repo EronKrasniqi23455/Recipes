@@ -34,8 +34,23 @@ namespace Recipes.Controllers
         // GET: Recipes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Recipes.Include(r => r.Category);
-            return View(await applicationDbContext.ToListAsync());
+            var applicationDbContext = _context.Recipes.Include(x=>x.Category).ToList();
+            var dataViewModel = new List<RecipeViewModel>();
+            foreach (var item in applicationDbContext)
+            {
+                var tempUser = _context.Users.FirstOrDefault(x => x.Id == item.UserId.ToString());
+                dataViewModel.Add(new RecipeViewModel()
+                {
+                    Id = item.Id,
+                    Title = item.Title,
+                    Description = item.Description,
+                    User = tempUser.Email,
+                    PictureURL = item.PictureURL,
+                    Duration = item.Duration,
+                    Category = item.Category
+                });
+            }
+            return View(dataViewModel);
         }
 
         // GET: Recipes/Details/5
@@ -116,7 +131,7 @@ namespace Recipes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,UserId,PictureURL,Duration,Description,CategoryId")] Recipe recipe)
+        public async Task<IActionResult> Edit(int id, Recipe recipe)
         {
             if (id != recipe.Id)
             {

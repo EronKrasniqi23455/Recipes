@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Recipes.Models.DataModels.Recipe>
+﻿@model IEnumerable<Recipes.Models.ViewModels.RecipeViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -41,7 +41,7 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserId)
+                    @Html.DisplayFor(modelItem => item.User)
                 </td>
                 <td>
                    <img src="~/Files/@item.PictureURL"  height="50"/>
@@ -53,7 +53,7 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Category.Id)
+                    @Html.DisplayFor(modelItem => item.Category.Title)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>

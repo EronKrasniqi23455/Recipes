@@ -45,7 +45,7 @@ namespace Recipes.Controllers
 
             return View(category);
         }
-
+        #region Create
         // GET: Categories/Create
         public IActionResult Create()
         {
@@ -67,7 +67,8 @@ namespace Recipes.Controllers
             }
             return View(category);
         }
-
+        #endregion
+        #region Edit
         // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -118,7 +119,9 @@ namespace Recipes.Controllers
             }
             return View(category);
         }
+        #endregion
 
+        #region Delete
         // GET: Categories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -147,7 +150,7 @@ namespace Recipes.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        #endregion
         private bool CategoryExists(int id)
         {
             return _context.Categories.Any(e => e.Id == id);

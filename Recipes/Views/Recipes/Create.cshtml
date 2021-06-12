@@ -12,16 +12,12 @@
     <div class="col-md-4">
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IngredientsChoosen" value=""/>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <label asp-for="File" class="control-label"></label>
                 <input type="file" asp-for="File" class="form-control" />
@@ -42,6 +38,27 @@
                 <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
             </div>
             <div class="form-group">
+                <label class="control-label">Ingridients</label>
+                <select asp-items="Model.IngredientsSelectList" id="ingridientList" class="form-control"></select>
+                <label class="control-label">Quantity</label>
+                <input type="number" id="ingridientValue" class="form-control" />
+                <button id="addIngridient">Add ingridient</button>
+            </div>
+            <div>
+                <label class="control-label">Ingridients table</label>
+                <table id="ingridientsTable" class="table table-active">
+                    <thead>
+                        <tr>
+                            <th>Ingridient</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -54,4 +71,19 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script type="text/javascript"> 
+    $("#addIngridient").click(function (event) {
+        event.preventDefault();
+        var ingridientItem = $("#ingridientList").val();
+        var ingridientText = $("#ingridientList :selected").text();
+        var ingridientValue = $("#ingridientValue").val();
+        var newIngridient =  ingridientItem + ',' + ingridientValue + '|';
+        var currentVal = $("#IngredientsChoosen").val();
+        var newIngridientVal = currentVal + newIngridient;
+        console.log(newIngridientVal);
+        $("#IngredientsChoosen").val(newIngridientVal);
+        var newRow = '<tr><td>' + ingridientText + '</td><td>' + ingridientValue + '</td></tr>';
+        $('#ingridientsTable tbody').append(newRow);
+    });
+</script>
 }

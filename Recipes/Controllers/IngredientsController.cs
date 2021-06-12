@@ -45,7 +45,7 @@ namespace Recipes.Controllers
 
             return View(ingredient);
         }
-
+        #region Create
         // GET: Ingredients/Create
         public IActionResult Create()
         {
@@ -69,7 +69,9 @@ namespace Recipes.Controllers
             ViewData["UnitId"] = new SelectList(_context.Units, "Id", "Name", ingredient.UnitId);
             return View(ingredient);
         }
+        #endregion
 
+        #region Edit
         // GET: Ingredients/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -122,7 +124,7 @@ namespace Recipes.Controllers
             ViewData["UnitId"] = new SelectList(_context.Units, "Id", "Id", ingredient.UnitId);
             return View(ingredient);
         }
-
+        #endregion
         // GET: Ingredients/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -141,7 +143,7 @@ namespace Recipes.Controllers
 
             return View(ingredient);
         }
-
+        #region Delete
         // POST: Ingredients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -152,7 +154,7 @@ namespace Recipes.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        #endregion
         private bool IngredientExists(int id)
         {
             return _context.Ingredients.Any(e => e.Id == id);

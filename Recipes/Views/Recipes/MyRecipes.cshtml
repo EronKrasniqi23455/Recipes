@@ -4,11 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Recipes</h1>
+<h1>My Recipes</h1>
 <link href="~/css/datatables.min.css" rel="stylesheet" />
-<p>
-    <a asp-action="Create" class="btn btn-info">Add</a>
-</p>
 <table class="table" id="dataTable">
     <thead>
         <tr>
@@ -44,7 +41,7 @@
                     @Html.DisplayFor(modelItem => item.User)
                 </td>
                 <td>
-                   <img src="~/Files/@item.PictureURL"  height="50"/>
+                    <img src="~/Files/@item.PictureURL" height="50" />
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Duration)
@@ -56,11 +53,9 @@
                     @Html.DisplayFor(modelItem => item.Category.Title)
                 </td>
                 <td>
-                    @if (item.IsOwner)
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                    }
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
 
                 </td>
@@ -72,8 +67,8 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/js/datatables.min.js"></script>
     <script>
-    $(document).ready(function () {
-        $('#dataTable').DataTable();
-    });
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+        });
     </script>
 }

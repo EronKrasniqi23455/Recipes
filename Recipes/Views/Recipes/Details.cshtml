@@ -1,54 +1,114 @@
-﻿@model Recipes.Models.DataModels.Recipe
+﻿@model Recipes.Models.ViewModels.RecipeViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Recipe</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PictureURL)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PictureURL)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Duration)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Duration)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Id)
-        </dd>
-    </dl>
+<div class="well" style="margin-top:3%;">
+    <div class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object" src="~/Files/@Model.PictureURL" height="150" width="150">
+        </a>
+        <div class="media-body">
+            <h4 class="media-heading">@Model.Title</h4>
+            <p class="text-right">By @Model.User</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Ingridient</th>
+                        <th>Unit</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Ingredients != null)
+                    {
+                        foreach (var ingridient in Model.Ingredients)
+                        {
+                            <tr>
+                                <td>@ingridient.Ingredient.Name</td>
+                                <td>@ingridient.Ingredient.Unit.Name </td>
+                                <td>@ingridient.Quantity </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            <p>
+                @Model.Description
+            </p>
+
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+
+<style>
+    body {
+        margin: 40px;
+    }
+
+    https://bootsnipp.com/snippets/dKB
+    .btn-circle {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        padding: 6px 0;
+        font-size: 12px;
+        line-height: 1.428571429;
+        border-radius: 15px;
+    }
+
+    .btn-circle.btn-lg {
+        width: 50px;
+        height: 50px;
+        padding: 10px 16px;
+        font-size: 18px;
+        line-height: 1.33;
+        border-radius: 25px;
+    }
+
+    .btn-circle.btn-xl {
+        width: 70px;
+        height: 70px;
+        padding: 10px 16px;
+        font-size: 24px;
+        line-height: 1.33;
+        border-radius: 35px;
+    }
+
+    .thumbnail {
+        padding: 0px;
+    }
+
+    .panel {
+        position: relative;
+    }
+
+        .panel > .panel-heading:after, .panel > .panel-heading:before {
+            position: absolute;
+            top: 11px;
+            left: -16px;
+            right: 100%;
+            width: 0;
+            height: 0;
+            display: block;
+            content: " ";
+            border-color: transparent;
+            border-style: solid solid outset;
+            pointer-events: none;
+        }
+
+        .panel > .panel-heading:after {
+            border-width: 7px;
+            border-right-color: #f7f7f7;
+            margin-top: 1px;
+            margin-left: 2px;
+        }
+
+        .panel > .panel-heading:before {
+            border-right-color: #ddd;
+            border-width: 8px;
+        }
+</style>

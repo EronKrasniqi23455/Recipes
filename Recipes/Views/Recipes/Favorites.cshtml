@@ -4,11 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Recipes</h1>
+<h1>Favourites</h1>
 <link href="~/css/datatables.min.css" rel="stylesheet" />
-<p>
-    <a asp-action="Create" class="btn btn-info">Add</a>
-</p>
+
 <table class="table" id="dataTable">
     <thead>
         <tr>
@@ -56,11 +54,6 @@
                     @Html.DisplayFor(modelItem => item.Category.Title)
                 </td>
                 <td>
-                    @if (item.IsOwner)
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                    }
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
 
                 </td>

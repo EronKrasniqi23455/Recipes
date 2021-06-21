@@ -38,6 +38,7 @@ namespace Recipes.Controllers
             var dataViewModel = new List<RecipeViewModel>();
             foreach (var item in applicationDbContext)
             {
+                //Get logged in user id
                 var tempUser = _context.Users.FirstOrDefault(x => x.Id == item.UserId.ToString());
                 dataViewModel.Add(new RecipeViewModel()
                 {
@@ -58,43 +59,76 @@ namespace Recipes.Controllers
         // GET: Recipes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
-
-            var recipe = await _context.Recipes
-                .Include(r => r.Category)
-                .Include(r=>r.Ingredients)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if(recipe.Ingredients != null)
-            {
-                foreach (var item in recipe.Ingredients)
+                if (id == null)
                 {
-                    item.Ingredient = _context.Ingredients.Include(x => x.Unit).FirstOrDefault(x => x.Id == item.IngredientId);
+                    return NotFound();
                 }
-            }
 
-            var tempUser = _context.Users.FirstOrDefault(x => x.Id == recipe.UserId.ToString());
-            var response = new RecipeViewModel()
-            {
-                Id = recipe.Id,
-                Title = recipe.Title,
-                Description = recipe.Description,
-                User = tempUser.Email,
-                PictureURL = recipe.PictureURL,
-                Duration = recipe.Duration,
-                Category = recipe.Category,
-                Ingredients = recipe.Ingredients,
-                IsOwner = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) == recipe.UserId ? true : false
-            };
-            if (recipe == null)
-            {
-                return NotFound();
-            }
+                var recipe = await _context.Recipes
+                    .Include(r => r.Category)
+                    .Include(r => r.Ingredients)
+                    .FirstOrDefaultAsync(m => m.Id == id);
 
-            return View(response);
+                if (recipe.Ingredients != null)
+                {
+                    foreach (var item in recipe.Ingredients)
+                    {
+                        item.Ingredient = _context.Ingredients.Include(x => x.Unit).FirstOrDefault(x => x.Id == item.IngredientId);
+                    }
+                }
+
+                var tempUser = _context.Users.FirstOrDefault(x => x.Id == recipe.UserId.ToString());
+                if(User.Identity.IsAuthenticated)
+                {
+                    var response = new RecipeViewModel()
+                    {
+                        Id = recipe.Id,
+                        Title = recipe.Title,
+                        Description = recipe.Description,
+                        User = tempUser.Email,
+                        PictureURL = recipe.PictureURL,
+                        Duration = recipe.Duration,
+                        Category = recipe.Category,
+                        Ingredients = recipe.Ingredients.Count > 0 ? recipe.Ingredients : null,
+                        IsOwner = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) == recipe.UserId ? true : false
+                    };
+                    if (recipe == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return View(response);
+                }
+                else
+                {
+                    var response = new RecipeViewModel()
+                    {
+                        Id = recipe.Id,
+                        Title = recipe.Title,
+                        Description = recipe.Description,
+                        User = tempUser.Email,
+                        PictureURL = recipe.PictureURL,
+                        Duration = recipe.Duration,
+                        Category = recipe.Category,
+                        Ingredients = recipe.Ingredients.Count > 0 ? recipe.Ingredients : null,
+                        IsOwner = false
+                    };
+                    if (recipe == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return View(response);
+                }
+              
+               
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
         }
         #endregion
 
@@ -117,6 +151,8 @@ namespace Recipes.Controllers
             if (ModelState.IsValid)
             {
                 recipe.UserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                //We save the image of recipe which we uploaded
                 if (recipe.File != null)
                 {
                     Random rnd = new Random();

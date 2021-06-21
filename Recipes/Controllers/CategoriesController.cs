@@ -45,6 +45,7 @@ namespace Recipes.Controllers
 
             return View(category);
         }
+
         #region Create
         // GET: Categories/Create
         public IActionResult Create()
@@ -68,6 +69,7 @@ namespace Recipes.Controllers
             return View(category);
         }
         #endregion
+
         #region Edit
         // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
